@@ -1,6 +1,5 @@
 import requests
 from datetime import datetime
-
 from config import weather_api_id
 
 
@@ -8,7 +7,7 @@ def convert_time(time):
     ts = int(time)
     return datetime.utcfromtimestamp(ts).strftime('%H:%M')
 
-# This func works with weather api, returns some today weather and an id of a picture of a weather.
+
 def get_weather():
     api_url = 'https://api.openweathermap.org/data/2.5/weather'
 
@@ -30,3 +29,4 @@ def get_weather():
 if __name__ == '__main__':
     weather, path = get_weather()
     print(weather, path)
+    # 04d@2x.png
