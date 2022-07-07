@@ -1,0 +1,78 @@
+C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\python.exe D:/OneDrive/Git/Python/Projects/Famaly_chat_Telegram_bot/Famaly_chat_Telegram_bot/main_bot.py
+Включение 14:07:10
+Traceback (most recent call last):
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connectionpool.py", line 449, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connectionpool.py", line 444, in _make_request
+    httplib_response = conn.getresponse()
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\http\client.py", line 1374, in getresponse
+    response.begin()
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\http\client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\http\client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\ssl.py", line 1273, in recv_into
+    return self.read(nbytes, buffer)
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\ssl.py", line 1129, in read
+    return self._sslobj.read(len, buffer)
+TimeoutError: The read operation timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\adapters.py", line 440, in send
+    resp = conn.urlopen(
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connectionpool.py", line 785, in urlopen
+    retries = retries.increment(
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\util\retry.py", line 550, in increment
+    raise six.reraise(type(error), error, _stacktrace)
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\packages\six.py", line 770, in reraise
+    raise value
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connectionpool.py", line 703, in urlopen
+    httplib_response = self._make_request(
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connectionpool.py", line 451, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connectionpool.py", line 340, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=25)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\OneDrive\Git\Python\Projects\Famaly_chat_Telegram_bot\Famaly_chat_Telegram_bot\main_bot.py", line 283, in <module>
+    if __name__ == '__main__':
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\telebot\__init__.py", line 658, in polling
+    self.__threaded_polling(non_stop, interval, timeout, long_polling_timeout, allowed_updates)
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\telebot\__init__.py", line 720, in __threaded_polling
+    raise e
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\telebot\__init__.py", line 679, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\telebot\util.py", line 105, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\telebot\util.py", line 87, in run
+    task(*args, **kwargs)
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\telebot\__init__.py", line 407, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1), 
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\telebot\__init__.py", line 387, in get_updates
+    json_updates = apihelper.get_updates(self.token, offset, limit, timeout, allowed_updates, long_polling_timeout)
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\telebot\apihelper.py", line 328, in get_updates
+    return _make_request(token, method_url, params=payload)
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\telebot\apihelper.py", line 152, in _make_request
+    result = _get_req_session().request(
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\sessions.py", line 529, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\sessions.py", line 645, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\Шавкат\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\adapters.py", line 532, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=25)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\OneDrive\Git\Python\Projects\Famaly_chat_Telegram_bot\Famaly_chat_Telegram_bot\main_bot.py", line 285, in <module>
+    
+AttributeError: module 'datetime' has no attribute 'now'

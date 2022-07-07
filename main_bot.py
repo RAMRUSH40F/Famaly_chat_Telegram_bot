@@ -1,15 +1,15 @@
 import telebot
 from telebot import types
-from config import token, sayhi, family_chat_id, admin_chat_id, poll_min_number
+from config import token, sayhi, family_chat_id, admin_chat_id
 from weather_api import get_weather
-from SQLighter import SQLighter
-import csv
 import pickle
-import re
 import schedule
 import time
 import threading
 import datetime
+
+from SQLighter import SQLighter
+from Chat_Poll import Poll
 
 bot = telebot.TeleBot(token)
 
@@ -36,7 +36,9 @@ def message_filter(message):
         if message.text in ['Уборка',"уборка"]: cleaning_menu(message)
         elif message.text == 'Заявить об уборке': cleaning_done_menu(message)
         elif message.text == 'Посмотреть баллы': get_scores(message)
-        elif message.text in ['Туалет','Кухня','Ванная','Коридор','Посуда']: cleaning_committed(message)
+        elif message.text in ['Туалет','Кухня','Ванная','Коридор','Посуда']:
+            poll = Poll(message, bot)
+            poll.send_poll()
     #  Модерируем плохие слова .
     elif censorship(message.text): bot.delete_message(message.chat.id, message.id)
 
@@ -141,80 +143,6 @@ def cleaning_done_menu(message):
     sent = bot.send_message(message.chat.id, 'Что ты уже убрал?', reply_markup=menu)
     # bot.delete_message(sent.chat.id, sent.id)
 
-
-def cleaning_committed(message):
-    global poll_info_status
-
-    if message.text == 'Кухня': points, half_point = 150 ,50
-    else: points, half_point = 100, 50
-
-    if not poll_info_status:
-
-        name = message.json['from']['first_name']
-        sender_id =  str(message.from_user.id)
-        bot.send_poll(int(family_chat_id), f'Убрал ли {name} комнату {message.text}?',
-                                  [ f'Да (+{points}б)', 'Нет(0б.)', f'50/50 (+{half_point}б.)' ], is_anonymous=False, type='regular',
-                                  disable_notification=True)
-        poll_info_status = True
-
-        global poll_info_name, poll_info_place, poll_info_points,poll_info_half_points
-        poll_info_name = sender_id
-        poll_info_place = message.text
-        poll_info_half_points = half_point
-
-
-    else:
-        bot.send_message(message.chat.id,'Одно голосование сейчас на проверке.Подождите, пожалуйста, а то я запутаюсь :)')
-
-
-
-def poll_status_checker():
-
-    global poll_info_status
-    global opt_yes, opt_no, opt_mid
-    global poll_info_name, poll_info_place, poll_info_points, poll_info_half_points
-
-    if int(opt_yes) >= poll_min_number :
-
-        bot.send_message(family_chat_id, 'Последнее голосование завершено, большинство согласно 😁')
-        poll_info_status = False
-        update_score(poll_info_name, poll_info_points, poll_info_place)
-
-        opt_yes, opt_no, opt_mid = 0, 0, 0
-
-
-
-    elif int(opt_no) >= poll_min_number - 1  :
-
-        bot.send_message(family_chat_id,'Последнее голосование завершено, большинство не согласно 🤓')
-        poll_info_status = False
-
-        opt_yes, opt_no, opt_mid = 0, 0, 0
-
-
-    elif int(opt_no) >= poll_min_number - 2 and opt_yes+opt_no+opt_mid >= poll_min_number:
-
-        bot.send_message(family_chat_id, 'Последнее голосование завершено, Не все согласны. Половоина баллов за уборку зачислено 🥴 ')
-        poll_info_status = False
-        update_score(poll_info_name, poll_info_half_points, poll_info_place)
-
-        opt_yes, opt_no, opt_mid = 0, 0, 0
-
-        #   false = pole is finished so you can start a new one. True - is in progress, wait for smth
-    else: pass
-
-
-#  understand what option a person vote for
-def process_new_poll_answer(poll):
-    global opt_yes, opt_no, opt_mid
-
-    answer = poll.option_ids[0]
-
-    if answer == 0 : opt_yes += 1
-    elif answer == 1 : opt_no += 1
-    elif answer == 2: opt_mid +=1
-
-
 def get_scores(message):
 
     # Подключаемся к БД
@@ -225,12 +153,7 @@ def get_scores(message):
 
     db.close()
 
-def update_score(id,points,place):
-    db = SQLighter('scores.db')
 
-    db.up_score(id, points, place)
-
-    db.close()
 
 
 #  Присылаем утром погоду и пожелания.
@@ -241,15 +164,8 @@ def good_morning():
 
 
 def morning_checker():
-    global poll_info_status
     schedule.every().day.at("05:40").do(good_morning)
-    while True:
-        if poll_info_status: poll_status_checker()
-        time.sleep(1)
 
-
-def poll_handler(polls):
-    print(polls)
 
 
 @bot.message_handler(commands=['start'])
@@ -258,22 +174,18 @@ def hello(message):
     bot.send_message(message.chat.id, sayhi)
     bot.delete_message(message.chat.id, message.id)
 
+if poll_status:
+    @bot.message_handler(content_types=['text'])
+    def main(message):
+        message_filter(message)
 
-@bot.message_handler(content_types=['text'])
-def main(message):
-    message_filter(message)
 
-@bot.poll_answer_handler(process_new_poll_answer)
-def poll_answer_handler(_):
+@bot.poll_answer_handler(Poll.process_new_poll_answer)
+def _(_):
     pass
 
+
 if __name__ == '__main__':
-
-    global poll_info_status
-    global opt_yes, opt_no
-    opt_yes, opt_no, opt_mid= 0, 0, 0
-    poll_info_status = False
-
 
     while True:
         try:
