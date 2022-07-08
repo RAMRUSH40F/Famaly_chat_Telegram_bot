@@ -1,6 +1,9 @@
+<<<<<<< Updated upstream
 import telebot
 from telebot import types
 import csv
+=======
+>>>>>>> Stashed changes
 import pickle
 import re
 import schedule
@@ -8,9 +11,21 @@ import time
 import threading
 import datetime
 
+import telebot
+from telebot import types
+from weather_api import get_weather
+
 from SQLighter import SQLighter
+<<<<<<< Updated upstream
 from config import token, sayhi, family_chat_id, admin_chat_id, poll_min_number
 from weather_api import get_weather
+=======
+from config import token, sayhi, family_chat_id, admin_chat_id, censorwords
+
+# Chat_poll is unavailaible due to incorrect work of TelegramBotApi.
+# In the future the bot shou;d be updated in terms of aoigramTelegramAPi, where there are not bugs with polls.
+# from Chat_Poll import Poll
+>>>>>>> Stashed changes
 
 
 # This is a main tree of received message.
@@ -31,6 +46,7 @@ def message_filter(message):
         elif message.text == 'Посмотреть список продуктов': show_shopping_list(message)
         elif message.text == 'Добавить продукты': add_to_shop_list(message)
         elif message.text == 'Очистить': delete_shoplist(message.chat.id)
+<<<<<<< Updated upstream
 
     # CLEANING IN A HOUSE POLL AND STATISTICS SECTION
     elif message.text in ['Уборка',"уборка",'Заявить об уборке','Посмотреть баллы','Туалет','Кухня','Ванная','Коридор','Посуда']:
@@ -40,6 +56,17 @@ def message_filter(message):
         elif message.text in ['Туалет','Кухня','Ванная','Коридор','Посуда']: cleaning_committed(message)
 
     # WORD CENSORSHIP SECTION
+=======
+    #  Раздел уборки
+    # elif message.text in ['Уборка',"уборка",'Заявить об уборке','Посмотреть баллы','Туалет','Кухня','Ванная','Коридор','Посуда']:
+    #     if message.text in ['Уборка',"уборка"]: cleaning_menu(message)
+    #     elif message.text == 'Заявить об уборке': cleaning_done_menu(message)
+    #     elif message.text == 'Посмотреть баллы': get_scores(message)
+    #     # elif message.text in ['Туалет','Кухня','Ванная','Коридор','Посуда']:
+    #     #     poll = Poll(message, bot)
+        #     poll.send_poll()
+    #  Модерируем плохие слова .
+>>>>>>> Stashed changes
     elif censorship(message.text): bot.delete_message(message.chat.id, message.id)
 
 
@@ -49,9 +76,11 @@ def main_menue(message):
         menu = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
         btn_weather = types.KeyboardButton(text='Погода')
         btn_store_list = types.KeyboardButton(text='Список Продуктов')
-        btn_cleaning = types.KeyboardButton(text='Уборка')
 
-        menu.add(btn_store_list, btn_cleaning, btn_weather)
+        # btn_cleaning = types.KeyboardButton(text='Уборка')
+        # menu.add(btn_store_list, btn_cleaning, btn_weather)
+        #
+        menu.add(btn_store_list, btn_weather)
         bot.send_message(message.chat.id, 'Вот список моих функций на сегодня. Пользуйся :) ', reply_markup=menu)
 
     else:
@@ -119,7 +148,7 @@ def send_weather(chatid):
         bot.send_photo(chatid, weather_icon)
 
 def censorship(text):
-    return text in ['плохой','какашка','шындырск']
+    return text in censorwords
 
 # This gives a user a CLEANING menu section buttons
 def cleaning_menu(message):
@@ -249,13 +278,22 @@ def morning_checker():
         if poll_info_status: poll_status_checker()
         time.sleep(1)
 
+<<<<<<< Updated upstream
 # Delete your /start message and send a welcome message
+=======
+# def handle_new_poll_answer(new_poll_answer):
+#     print(new_poll_answer)
+#
+#     Poll.process_new_poll_answer(new_poll_answer)
+
+>>>>>>> Stashed changes
 @bot.message_handler(commands=['start'])
 def hello(message):
     # sayhi - starting message from a config.py
     bot.send_message(message.chat.id, sayhi)
     bot.delete_message(message.chat.id, message.id)
 
+<<<<<<< Updated upstream
 #  Process every message to a special sorting message tree
 @bot.message_handler(content_types=['text'])
 def main(message):
@@ -264,6 +302,19 @@ def main(message):
 @bot.poll_answer_handler(process_new_poll_answer)
 def poll_answer_handler(_):
     pass
+=======
+
+@bot.message_handler(content_types=['text'])
+def main(message):
+    message_filter(message)
+
+
+
+# @bot.poll_answer_handler(handle_new_poll_answer)
+# def _():
+#     pass
+
+>>>>>>> Stashed changes
 
 if __name__ == '__main__':
 
@@ -285,6 +336,13 @@ if __name__ == '__main__':
             thread1.start()
 
             bot.polling(none_stop=True)
+<<<<<<< Updated upstream
         except Exception as exc:
             print('Выключение', exc, str(datetime.datetime.now().time())[:8])
             time.sleep(15)
+=======
+        except ValueError:
+            print('Выключение', str(datetime.datetime.now().time())[:8])
+            time.sleep(5)
+            raise
+>>>>>>> Stashed changes
