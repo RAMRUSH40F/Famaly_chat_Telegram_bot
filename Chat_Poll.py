@@ -3,6 +3,9 @@ from SQLighter import SQLighter
 import json
 import collections
 
+
+# Class for polling. Is not ready yet because TELEGRAMBOTAPI library
+# has not convenient interface for polling.Better using Aiogram.
 class Poll:
 
     def get_name(self):

@@ -1,8 +1,7 @@
 import sqlite3
 from datetime import datetime
 
-# This class is to make changes in a database, gives a current database info.
-
+# This is Data Access Object class.
 class SQLighter:
 
     def __init__(self, database):
