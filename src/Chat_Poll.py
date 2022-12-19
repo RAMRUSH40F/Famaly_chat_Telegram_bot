@@ -43,7 +43,7 @@ class Poll:
 
     @staticmethod
     def get_stats_from_json():
-        with open('Poll_info.json','r') as json_file:
+        with open('Poll_info.json', 'r') as json_file:
             info = json.load(json_file)
             return info
 
